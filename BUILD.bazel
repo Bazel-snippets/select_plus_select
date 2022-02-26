@@ -1,0 +1,28 @@
+load("repro_rule.bzl", "repro_rule")
+
+package(default_visibility = ["//visibility:public"])
+
+config_setting(
+    name = "windows",
+    constraint_values = [
+        "@platforms//os:windows",
+    ],
+)
+
+config_setting(
+    name = "linux",
+    constraint_values = [
+        "@platforms//os:linux",
+    ],
+)
+
+repro_rule(
+    name = "repro_rule",
+    targets_list = select({
+        "windows": ["//build_tests/dylib1"],
+        "//conditions:default": [],
+    }) + select({
+        "linux":   ["//build_tests/dylib1"],
+        "//conditions:default": [],
+    }),
+)
